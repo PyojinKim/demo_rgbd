@@ -35,23 +35,23 @@ double txRec, tyRec, tzRec;
 double transformBefBA[6] = {0};
 double transformAftBA[6] = {0};
 
-void diffRotation(double cx, double cy, double cz, double lx, double ly, double lz, 
+void diffRotation(double cx, double cy, double cz, double lx, double ly, double lz,
                   double &ox, double &oy, double &oz)
 {
-  double srx = cos(cx)*cos(cy)*(sin(ly)*sin(lz) + cos(ly)*cos(lz)*sin(lx)) 
+  double srx = cos(cx)*cos(cy)*(sin(ly)*sin(lz) + cos(ly)*cos(lz)*sin(lx))
              - cos(cx)*sin(cy)*(cos(ly)*sin(lz) - cos(lz)*sin(lx)*sin(ly)) - cos(lx)*cos(lz)*sin(cx);
   ox = -asin(srx);
 
-  double srycrx = cos(cx)*sin(cy)*(cos(ly)*cos(lz) + sin(lx)*sin(ly)*sin(lz)) 
+  double srycrx = cos(cx)*sin(cy)*(cos(ly)*cos(lz) + sin(lx)*sin(ly)*sin(lz))
                 - cos(cx)*cos(cy)*(cos(lz)*sin(ly) - cos(ly)*sin(lx)*sin(lz)) - cos(lx)*sin(cx)*sin(lz);
   double crycrx = sin(cx)*sin(lx) + cos(cx)*cos(cy)*cos(lx)*cos(ly) + cos(cx)*cos(lx)*sin(cy)*sin(ly);
   oy = atan2(srycrx / cos(ox), crycrx / cos(ox));
 
-  double srzcrx = cos(cx)*cos(lx)*cos(lz)*sin(cz) - (cos(cz)*sin(cy) 
-                - cos(cy)*sin(cx)*sin(cz))*(sin(ly)*sin(lz) + cos(ly)*cos(lz)*sin(lx)) 
+  double srzcrx = cos(cx)*cos(lx)*cos(lz)*sin(cz) - (cos(cz)*sin(cy)
+                - cos(cy)*sin(cx)*sin(cz))*(sin(ly)*sin(lz) + cos(ly)*cos(lz)*sin(lx))
                 - (cos(cy)*cos(cz) + sin(cx)*sin(cy)*sin(cz))*(cos(ly)*sin(lz) - cos(lz)*sin(lx)*sin(ly));
-  double crzcrx = (sin(cy)*sin(cz) + cos(cy)*cos(cz)*sin(cx))*(sin(ly)*sin(lz) 
-                + cos(ly)*cos(lz)*sin(lx)) + (cos(cy)*sin(cz) - cos(cz)*sin(cx)*sin(cy))*(cos(ly)*sin(lz) 
+  double crzcrx = (sin(cy)*sin(cz) + cos(cy)*cos(cz)*sin(cx))*(sin(ly)*sin(lz)
+                + cos(ly)*cos(lz)*sin(lx)) + (cos(cy)*sin(cz) - cos(cz)*sin(cx)*sin(cy))*(cos(ly)*sin(lz)
                 - cos(lz)*sin(lx)*sin(ly)) + cos(cx)*cos(cz)*cos(lx)*cos(lz);
   oz = atan2(srzcrx / cos(ox), crzcrx / cos(ox));
 }
@@ -95,38 +95,38 @@ void transformAssociateToBA()
   double salz = sin(transformAftBA[2]);
   double calz = cos(transformAftBA[2]);
 
-  double srx = -sbcx*(salx*sblx + calx*caly*cblx*cbly + calx*cblx*saly*sbly) 
-             - cbcx*cbcz*(calx*saly*(cbly*sblz - cblz*sblx*sbly) 
-             - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx) 
-             - cbcx*sbcz*(calx*caly*(cblz*sbly - cbly*sblx*sblz) 
+  double srx = -sbcx*(salx*sblx + calx*caly*cblx*cbly + calx*cblx*saly*sbly)
+             - cbcx*cbcz*(calx*saly*(cbly*sblz - cblz*sblx*sbly)
+             - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx)
+             - cbcx*sbcz*(calx*caly*(cblz*sbly - cbly*sblx*sblz)
              - calx*saly*(cbly*cblz + sblx*sbly*sblz) + cblx*salx*sblz);
   pitchRec = -asin(srx);
 
-  double srycrx = (cbcy*sbcz - cbcz*sbcx*sbcy)*(calx*saly*(cbly*sblz - cblz*sblx*sbly) 
-                - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx) 
-                - (cbcy*cbcz + sbcx*sbcy*sbcz)*(calx*caly*(cblz*sbly - cbly*sblx*sblz) 
-                - calx*saly*(cbly*cblz + sblx*sbly*sblz) + cblx*salx*sblz) 
+  double srycrx = (cbcy*sbcz - cbcz*sbcx*sbcy)*(calx*saly*(cbly*sblz - cblz*sblx*sbly)
+                - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx)
+                - (cbcy*cbcz + sbcx*sbcy*sbcz)*(calx*caly*(cblz*sbly - cbly*sblx*sblz)
+                - calx*saly*(cbly*cblz + sblx*sbly*sblz) + cblx*salx*sblz)
                 + cbcx*sbcy*(salx*sblx + calx*caly*cblx*cbly + calx*cblx*saly*sbly);
-  double crycrx = (cbcz*sbcy - cbcy*sbcx*sbcz)*(calx*caly*(cblz*sbly - cbly*sblx*sblz) 
-                - calx*saly*(cbly*cblz + sblx*sbly*sblz) + cblx*salx*sblz) 
-                - (sbcy*sbcz + cbcy*cbcz*sbcx)*(calx*saly*(cbly*sblz - cblz*sblx*sbly) 
-                - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx) 
+  double crycrx = (cbcz*sbcy - cbcy*sbcx*sbcz)*(calx*caly*(cblz*sbly - cbly*sblx*sblz)
+                - calx*saly*(cbly*cblz + sblx*sbly*sblz) + cblx*salx*sblz)
+                - (sbcy*sbcz + cbcy*cbcz*sbcx)*(calx*saly*(cbly*sblz - cblz*sblx*sbly)
+                - calx*caly*(sbly*sblz + cbly*cblz*sblx) + cblx*cblz*salx)
                 + cbcx*cbcy*(salx*sblx + calx*caly*cblx*cbly + calx*cblx*saly*sbly);
   yawRec = atan2(srycrx / cos(pitchRec), crycrx / cos(pitchRec));
-  
-  double srzcrx = sbcx*(cblx*cbly*(calz*saly - caly*salx*salz) 
-                - cblx*sbly*(caly*calz + salx*saly*salz) + calx*salz*sblx) 
-                - cbcx*cbcz*((caly*calz + salx*saly*salz)*(cbly*sblz - cblz*sblx*sbly) 
-                + (calz*saly - caly*salx*salz)*(sbly*sblz + cbly*cblz*sblx) 
-                - calx*cblx*cblz*salz) + cbcx*sbcz*((caly*calz + salx*saly*salz)*(cbly*cblz 
-                + sblx*sbly*sblz) + (calz*saly - caly*salx*salz)*(cblz*sbly - cbly*sblx*sblz) 
+
+  double srzcrx = sbcx*(cblx*cbly*(calz*saly - caly*salx*salz)
+                - cblx*sbly*(caly*calz + salx*saly*salz) + calx*salz*sblx)
+                - cbcx*cbcz*((caly*calz + salx*saly*salz)*(cbly*sblz - cblz*sblx*sbly)
+                + (calz*saly - caly*salx*salz)*(sbly*sblz + cbly*cblz*sblx)
+                - calx*cblx*cblz*salz) + cbcx*sbcz*((caly*calz + salx*saly*salz)*(cbly*cblz
+                + sblx*sbly*sblz) + (calz*saly - caly*salx*salz)*(cblz*sbly - cbly*sblx*sblz)
                 + calx*cblx*salz*sblz);
-  double crzcrx = sbcx*(cblx*sbly*(caly*salz - calz*salx*saly) 
-                - cblx*cbly*(saly*salz + caly*calz*salx) + calx*calz*sblx) 
-                + cbcx*cbcz*((saly*salz + caly*calz*salx)*(sbly*sblz + cbly*cblz*sblx) 
-                + (caly*salz - calz*salx*saly)*(cbly*sblz - cblz*sblx*sbly) 
-                + calx*calz*cblx*cblz) - cbcx*sbcz*((saly*salz + caly*calz*salx)*(cblz*sbly 
-                - cbly*sblx*sblz) + (caly*salz - calz*salx*saly)*(cbly*cblz + sblx*sbly*sblz) 
+  double crzcrx = sbcx*(cblx*sbly*(caly*salz - calz*salx*saly)
+                - cblx*cbly*(saly*salz + caly*calz*salx) + calx*calz*sblx)
+                + cbcx*cbcz*((saly*salz + caly*calz*salx)*(sbly*sblz + cbly*cblz*sblx)
+                + (caly*salz - calz*salx*saly)*(cbly*sblz - cblz*sblx*sbly)
+                + calx*calz*cblx*cblz) - cbcx*sbcz*((saly*salz + caly*calz*salx)*(cblz*sbly
+                - cbly*sblx*sblz) + (caly*salz - calz*salx*saly)*(cbly*cblz + sblx*sbly*sblz)
                 - calx*calz*cblx*sblz);
   rollRec = atan2(srzcrx / cos(pitchRec), crzcrx / cos(pitchRec));
 
@@ -247,7 +247,7 @@ int main(int argc, char** argv)
 
       transformAssociateToBA();
 
-      Pose3d_Factor* poseFactors0 = new Pose3d_Factor(pose0, 
+      Pose3d_Factor* poseFactors0 = new Pose3d_Factor(pose0,
                                     Pose3d(tzRec, txRec, tyRec, yawRec, pitchRec, rollRec), noise2);
       ba.add_factor(poseFactors0);
 
@@ -291,7 +291,7 @@ int main(int argc, char** argv)
         diffRotation(pitch, yaw, roll, pitchRec, yawRec, rollRec, pitchDiff, yawDiff, rollDiff);
 
         Pose3d_Pose3d_Factor* poseposeFactorn = new Pose3d_Pose3d_Factor
-                                                (poses[i - 1], posen, Pose3d(tzDiff, txDiff, tyDiff, 
+                                                (poses[i - 1], posen, Pose3d(tzDiff, txDiff, tyDiff,
                                                 yawDiff, pitchDiff, rollDiff), noise3);
         posePoseFactors.push_back(poseposeFactorn);
         ba.add_factor(poseposeFactorn);
@@ -545,7 +545,7 @@ int main(int argc, char** argv)
       tfAftBA.child_frame_id_ = "/aft_ba";
       tfAftBA.stamp_ = ros::Time().fromSec(depthPointsTime);
       tfAftBA.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
-      tfAftBA.setOrigin(tf::Vector3(transformAftBA[3], 
+      tfAftBA.setOrigin(tf::Vector3(transformAftBA[3],
                             transformAftBA[4], transformAftBA[5]));
       tfBroadcaster.sendTransform(tfAftBA);
     }

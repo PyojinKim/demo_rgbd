@@ -62,7 +62,7 @@ ros::Publisher *imagePointsLastPubPointer;
 ros::Publisher *imageShowPubPointer;
 cv_bridge::CvImage bridge;
 
-void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData) 
+void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData)
 {
   timeLast = timeCur;
   timeCur = imageData->header.stamp.toSec();
@@ -135,8 +135,8 @@ void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData)
   }
 
   cvCalcOpticalFlowPyrLK(imageLast, imageCur, pyrLast, pyrCur,
-                         featuresLast, featuresCur, totalFeatureNum, cvSize(winSize, winSize), 
-                         3, featuresFound, featuresError, 
+                         featuresLast, featuresCur, totalFeatureNum, cvSize(winSize, winSize),
+                         3, featuresFound, featuresError,
                          cvTermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01), 0);
 
   for (int i = 0; i < totalSubregionNum; i++) {
@@ -147,13 +147,13 @@ void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData)
   int featureCount = 0;
   double meanShiftX = 0, meanShiftY = 0;
   for (int i = 0; i < totalFeatureNum; i++) {
-    double trackDis = sqrt((featuresLast[i].x - featuresCur[i].x) 
+    double trackDis = sqrt((featuresLast[i].x - featuresCur[i].x)
                     * (featuresLast[i].x - featuresCur[i].x)
-                    + (featuresLast[i].y - featuresCur[i].y) 
+                    + (featuresLast[i].y - featuresCur[i].y)
                     * (featuresLast[i].y - featuresCur[i].y));
 
-    if (!(trackDis > maxTrackDis || featuresCur[i].x < xBoundary || 
-      featuresCur[i].x > imageWidth - xBoundary || featuresCur[i].y < yBoundary || 
+    if (!(trackDis > maxTrackDis || featuresCur[i].x < xBoundary ||
+      featuresCur[i].x > imageWidth - xBoundary || featuresCur[i].y < yBoundary ||
       featuresCur[i].y > imageHeight - yBoundary)) {
 
       int xInd = (int)((featuresLast[i].x - xBoundary) / subregionWidth);

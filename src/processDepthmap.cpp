@@ -111,7 +111,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
 
       double pointDis = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
       double timeDis = time - initTime - point.intensity;
-      if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1 && point.z > 0.3 && pointDis < 15 &&  
+      if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1 && point.z > 0.3 && pointDis < 15 &&
           timeDis <= 5.0) {
         tempCloud->push_back(point);
       }
@@ -158,7 +158,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
         point.z = z2 - tz2;
 
         double pointDis = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
-        if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1.5 && point.z > 0.3 && 
+        if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1.5 && point.z > 0.3 &&
             pointDis < 15) {
           tempCloud->push_back(point);
         }

@@ -35,4 +35,3 @@ POINT_CLOUD_REGISTER_POINT_STRUCT (DepthPoint,
                                    (int, ind, ind))
 
 #endif
-

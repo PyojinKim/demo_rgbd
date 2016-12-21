@@ -78,7 +78,7 @@ static void download(const oclMat& ocl_mat, vector<unsigned char>& vec)
   ocl_mat.download(mat);
 }
 
-void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData) 
+void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData)
 {
   timeLast = timeCur;
   timeCur = imageData->header.stamp.toSec();
@@ -198,13 +198,13 @@ void imageDataHandler(const sensor_msgs::Image::ConstPtr& imageData)
   ImagePoint point;
   int featureCount = 0;
   for (int i = 0; i < totalFeatureNum; i++) {
-    double trackDis = sqrt(((*featuresLast)[i].x - (*featuresCur)[i].x) 
+    double trackDis = sqrt(((*featuresLast)[i].x - (*featuresCur)[i].x)
                     * ((*featuresLast)[i].x - (*featuresCur)[i].x)
-                    + ((*featuresLast)[i].y - (*featuresCur)[i].y) 
+                    + ((*featuresLast)[i].y - (*featuresCur)[i].y)
                     * ((*featuresLast)[i].y - (*featuresCur)[i].y));
 
-    if (!(trackDis > maxTrackDis || (*featuresCur)[i].x < xBoundary || 
-      (*featuresCur)[i].x > imageWidth - xBoundary || (*featuresCur)[i].y < yBoundary || 
+    if (!(trackDis > maxTrackDis || (*featuresCur)[i].x < xBoundary ||
+      (*featuresCur)[i].x > imageWidth - xBoundary || (*featuresCur)[i].y < yBoundary ||
       (*featuresCur)[i].y > imageHeight - yBoundary) && featuresStatus[i]) {
 
       int xInd = (int)(((*featuresLast)[i].x - xBoundary) / subregionWidth);
