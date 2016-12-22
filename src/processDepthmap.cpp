@@ -112,7 +112,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
       double pointDis = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
       double timeDis = time - initTime - point.intensity;
       if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1 && point.z > 0.3 && pointDis < 15 &&
-          timeDis <= 5.0) {
+      timeDis <= 5.0) {
         tempCloud->push_back(point);
       }
     }
@@ -159,7 +159,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
 
         double pointDis = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
         if (fabs(point.x / point.z) < 2 && fabs(point.y / point.z) < 1.5 && point.z > 0.3 &&
-            pointDis < 15) {
+        pointDis < 15) {
           tempCloud->push_back(point);
         }
       }
@@ -210,7 +210,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
   timeRec = time;
 }
 
-void syncCloudHandler(const sensor_msgs::Image::ConstPtr& syncCloud2)
+void syncCloudHandler(const sensor_msgs::ImageConstPtr& syncCloud2)
 {
   cloudCount = (cloudCount + 1) % (cloudSkipNum + 1);
   if (cloudCount != 0) {
@@ -231,7 +231,16 @@ void syncCloudHandler(const sensor_msgs::Image::ConstPtr& syncCloud2)
   tempCloud3->clear();
   pcl::PointXYZI point;
   double halfDSRate = cloudDSRate / 2.0 - 0.5;
-  const float* syncCloud2Pointer = reinterpret_cast<const float*>(&syncCloud2->data[0]);
+
+  // get current depth image as CV_64FC1 (user can define image datatype)
+  cv::Mat syncCloud2Pointer;
+  try {
+    syncCloud2Pointer = cv_bridge::toCvShare(syncCloud2, sensor_msgs::image_encodings::TYPE_64FC1)->image;
+  } catch (cv_bridge::Exception& e) {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
+
   for (double i = halfDSRate; i < imageHeight; i += cloudDSRate) {
     for (double j = halfDSRate; j < imageWidth; j += cloudDSRate) {
       int pixelCount = 0;
@@ -240,7 +249,7 @@ void syncCloudHandler(const sensor_msgs::Image::ConstPtr& syncCloud2)
       int js = int(j - halfDSRate), je = int(j + halfDSRate);
       for (int ii = is; ii <= ie; ii++) {
         for (int jj = js; jj <= je; jj++) {
-          val = syncCloud2Pointer[ii * imageWidth + jj];
+          val = syncCloud2Pointer.at<double>(ii, jj) / 1000;
           if (val > 0.3 && val < 7) {
             valSum += val;
             pixelCount++;
@@ -283,12 +292,11 @@ int main(int argc, char** argv)
     syncCloudArray[i] = syncCloudTemp;
   }
 
-  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry> ("/cam_to_init", 5, voDataHandler);
+  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry>("/cam_to_init", 5, voDataHandler);
 
-  ros::Subscriber syncCloudSub = nh.subscribe<sensor_msgs::Image>
-                                 ("/camera/depth_registered/image", 1, syncCloudHandler);
+  ros::Subscriber syncCloudSub = nh.subscribe("/camera/depth_aligned/image_rect", 1, syncCloudHandler);
 
-  ros::Publisher depthCloudPub = nh.advertise<sensor_msgs::PointCloud2> ("/depth_cloud", 5);
+  ros::Publisher depthCloudPub = nh.advertise<sensor_msgs::PointCloud2>("/depth_cloud", 5);
   depthCloudPubPointer = &depthCloudPub;
 
   ros::spin();

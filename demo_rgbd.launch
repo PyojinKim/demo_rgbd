@@ -1,5 +1,6 @@
 <launch>
 
+  <node pkg="demo_rgbd" type="realsenseTopics" name="realsenseTopics" output="screen"/>
   <node pkg="demo_rgbd" type="featureTracking" name="featureTracking" output="screen"/>
   <node pkg="demo_rgbd" type="visualOdometry" name="visualOdometry" output="screen"/>
   <node pkg="demo_rgbd" type="bundleAdjust" name="bundleAdjust" output="screen"/>

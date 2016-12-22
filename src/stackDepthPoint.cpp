@@ -63,10 +63,9 @@ int main(int argc, char** argv)
     depthPoints[i] = depthPointsTemp;
   }
 
-  ros::Subscriber depthPointsSub = nh.subscribe<sensor_msgs::PointCloud2>
-                                   ("/depth_points_last", 5, depthPointsHandler);
+  ros::Subscriber depthPointsSub = nh.subscribe<sensor_msgs::PointCloud2>("/depth_points_last", 5, depthPointsHandler);
 
-  ros::Publisher depthPointsPub = nh.advertise<sensor_msgs::PointCloud2> ("/depth_points_stacked", 1);
+  ros::Publisher depthPointsPub = nh.advertise<sensor_msgs::PointCloud2>("/depth_points_stacked", 1);
   depthPointsPubPointer = &depthPointsPub;
 
   ros::spin();

@@ -154,7 +154,7 @@ void voDataHandler(const nav_msgs::Odometry::ConstPtr& voData)
   timeRec = time;
 }
 
-void syncCloudHandler(const sensor_msgs::Image::ConstPtr& syncCloud2)
+void syncCloudHandler(const sensor_msgs::ImageConstPtr& syncCloud2)
 {
   cloudCount = (cloudCount + 1) % (cloudSkipNum + 1);
   if (cloudCount != 0) {
@@ -168,22 +168,30 @@ void syncCloudHandler(const sensor_msgs::Image::ConstPtr& syncCloud2)
 
   tempCloud2->clear();
   pcl::PointXYZ point;
-  const float* syncCloud2Pointer = reinterpret_cast<const float*>(&syncCloud2->data[0]);
-  for (int i = 0; i < imagePixelNum; i++) {
-    float val = syncCloud2Pointer[i];
 
-    int xd = i % imageWidth;
-    int yd = int(i / imageWidth);
+  // get current depth image as CV_64FC1 (user can define image datatype)
+  cv::Mat syncCloud2Pointer;
+  try {
+    syncCloud2Pointer = cv_bridge::toCvShare(syncCloud2, sensor_msgs::image_encodings::TYPE_64FC1)->image;
+  } catch (cv_bridge::Exception& e) {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
 
-    double ud = (kDepth[2] - xd) / kDepth[0];
-    double vd = (kDepth[5] - yd) / kDepth[4];
+  for (int i = 0; i < imageHeight; i++) {
+    for (int j = 0; j < imageWidth; j++) {
+      float val = syncCloud2Pointer.at<double>(i, j) / 1000;
 
-    point.z = val;
-    point.x = ud * val;
-    point.y = vd * val;
+      double ud = (kDepth[2] - j) / kDepth[0];
+      double vd = (kDepth[5] - i) / kDepth[4];
 
-    if (point.z > 0.3 && point.z < 7) {
-      tempCloud2->push_back(point);
+      point.z = val;
+      point.x = ud * val;
+      point.y = vd * val;
+
+      if (point.z > 0.3 && point.z < 7) {
+        tempCloud2->push_back(point);
+      }
     }
   }
 
@@ -206,12 +214,11 @@ int main(int argc, char** argv)
     syncCloudArray[i] = syncCloudTemp;
   }
 
-  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry> ("/cam2_to_init", 5, voDataHandler);
+  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry>("/cam2_to_init", 5, voDataHandler);
 
-  ros::Subscriber syncCloudSub = nh.subscribe<sensor_msgs::Image>
-                                 ("/camera/depth_registered/image", 1, syncCloudHandler);
+  ros::Subscriber syncCloudSub = nh.subscribe("/camera/depth_aligned/image_rect", 1, syncCloudHandler);
 
-  ros::Publisher surroundCloudPub = nh.advertise<sensor_msgs::PointCloud2> ("/surround_cloud", 1);
+  ros::Publisher surroundCloudPub = nh.advertise<sensor_msgs::PointCloud2>("/surround_cloud", 1);
   surroundCloudPubPointer = &surroundCloudPub;
 
   ros::spin();

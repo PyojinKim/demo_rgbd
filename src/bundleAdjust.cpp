@@ -192,12 +192,11 @@ int main(int argc, char** argv)
     depthPoints[i] = depthPointsTemp;
   }
 
-  ros::Subscriber depthPointsSub = nh.subscribe<sensor_msgs::PointCloud2>
-                                   ("/depth_points_stacked", 1, depthPointsHandler);
+  ros::Subscriber depthPointsSub = nh.subscribe<sensor_msgs::PointCloud2>("/depth_points_stacked", 1, depthPointsHandler);
 
-  ros::Publisher odomBefBAPub = nh.advertise<nav_msgs::Odometry> ("/bef_ba_to_init", 1);
+  ros::Publisher odomBefBAPub = nh.advertise<nav_msgs::Odometry>("/bef_ba_to_init", 1);
 
-  ros::Publisher odomAftBAPub = nh.advertise<nav_msgs::Odometry> ("/aft_ba_to_init", 1);
+  ros::Publisher odomAftBAPub = nh.advertise<nav_msgs::Odometry>("/aft_ba_to_init", 1);
 
   tf::TransformBroadcaster tfBroadcaster;
 

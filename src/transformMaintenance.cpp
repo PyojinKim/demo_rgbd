@@ -189,16 +189,13 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "transformMaintenance");
   ros::NodeHandle nh;
 
-  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry>
-                              ("/cam_to_init", 1, voDataHandler);
+  ros::Subscriber voDataSub = nh.subscribe<nav_msgs::Odometry>("/cam_to_init", 1, voDataHandler);
 
-  ros::Subscriber odomBefBASub = nh.subscribe<nav_msgs::Odometry>
-                                 ("/bef_ba_to_init", 1, odomBefBAHandler);
+  ros::Subscriber odomBefBASub = nh.subscribe<nav_msgs::Odometry>("/bef_ba_to_init", 1, odomBefBAHandler);
 
-  ros::Subscriber odomAftBASub = nh.subscribe<nav_msgs::Odometry>
-                                 ("/aft_ba_to_init", 1, odomAftBAHandler);
+  ros::Subscriber odomAftBASub = nh.subscribe<nav_msgs::Odometry>("/aft_ba_to_init", 1, odomAftBAHandler);
 
-  ros::Publisher voData2Pub = nh.advertise<nav_msgs::Odometry> ("/cam2_to_init", 1);
+  ros::Publisher voData2Pub = nh.advertise<nav_msgs::Odometry>("/cam2_to_init", 1);
   voData2PubPointer = &voData2Pub;
   voData2.header.frame_id = "/camera_init";
   voData2.child_frame_id = "/camera2";

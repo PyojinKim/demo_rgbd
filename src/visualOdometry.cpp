@@ -817,24 +817,22 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "visualOdometry");
   ros::NodeHandle nh;
 
-  ros::Subscriber imagePointsSub = nh.subscribe<sensor_msgs::PointCloud2>
-                                   ("/image_points_last", 5, imagePointsHandler);
+  ros::Subscriber imagePointsSub = nh.subscribe<sensor_msgs::PointCloud2>("/image_points_last", 5, imagePointsHandler);
 
-  ros::Subscriber depthCloudSub = nh.subscribe<sensor_msgs::PointCloud2>
-                                  ("/depth_cloud", 5, depthCloudHandler);
+  ros::Subscriber depthCloudSub = nh.subscribe<sensor_msgs::PointCloud2>("/depth_cloud", 5, depthCloudHandler);
 
-  ros::Subscriber imuDataSub = nh.subscribe<sensor_msgs::Imu> ("/imu/data", 5, imuDataHandler);
+  ros::Subscriber imuDataSub = nh.subscribe<sensor_msgs::Imu>("/imu/data", 5, imuDataHandler);
 
-  ros::Publisher voDataPub = nh.advertise<nav_msgs::Odometry> ("/cam_to_init", 5);
+  ros::Publisher voDataPub = nh.advertise<nav_msgs::Odometry>("/cam_to_init", 5);
   voDataPubPointer = &voDataPub;
 
   tf::TransformBroadcaster tfBroadcaster;
   tfBroadcasterPointer = &tfBroadcaster;
 
-  ros::Publisher depthPointsPub = nh.advertise<sensor_msgs::PointCloud2> ("/depth_points_last", 5);
+  ros::Publisher depthPointsPub = nh.advertise<sensor_msgs::PointCloud2>("/depth_points_last", 5);
   depthPointsPubPointer = &depthPointsPub;
 
-  ros::Publisher imagePointsProjPub = nh.advertise<sensor_msgs::PointCloud2> ("/image_points_proj", 1);
+  ros::Publisher imagePointsProjPub = nh.advertise<sensor_msgs::PointCloud2>("/image_points_proj", 1);
   imagePointsProjPubPointer = &imagePointsProjPub;
 
   ros::Subscriber imageDataSub = nh.subscribe<sensor_msgs::Image>("/image/show", 1, imageDataHandler);
