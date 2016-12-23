@@ -89,6 +89,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -Ofast -flto -march=native")
 
 ## Declare executables
 add_executable(realsenseTopics src/realsenseTopics.cpp)
+add_executable(realsenseTopicsSubscriber src/realsenseTopicsSubscriber.cpp)
+add_executable(TUMdatasetTopicConverter src/TUMdatasetTopicConverter.cpp)
 add_executable(featureTracking src/featureTracking.cpp)
 add_executable(visualOdometry src/visualOdometry.cpp)
 add_executable(bundleAdjust src/bundleAdjust.cpp)
@@ -99,6 +101,8 @@ add_executable(registerPointCloud src/registerPointCloud.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(realsenseTopics ${LINK_LIBS})
+target_link_libraries(realsenseTopicsSubscriber ${LINK_LIBS})
+target_link_libraries(TUMdatasetTopicConverter ${LINK_LIBS})
 target_link_libraries(featureTracking ${LINK_LIBS})
 target_link_libraries(visualOdometry ${LINK_LIBS})
 target_link_libraries(bundleAdjust ${LINK_LIBS})
