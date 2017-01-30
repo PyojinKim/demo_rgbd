@@ -8,9 +8,9 @@
 #include "cameraParameters.h"
 #include "pointDefinition.h"
 
-std::string rgbFolderName, depthFolderName;
-uint32_t rgbImageCounter, depthImageCounter;
-std::string rgbImageFileName, depthImageFileName;
+std::string folderName, rgbImageFileName, depthImageFileName;
+FILE *rgbTextStrm;
+FILE *depTextStrm;
 
 void imageMonoCallback(const sensor_msgs::ImageConstPtr& msgImageMono)
 {
@@ -23,14 +23,14 @@ void imageMonoCallback(const sensor_msgs::ImageConstPtr& msgImageMono)
     return;
   }
 
-  // change current rgb image file name
+  // save rgb image time and name in text file
+  double rgbImageTime = msgImageMono->header.stamp.toSec();
   char rgbImageIndex[255];
-  sprintf(rgbImageIndex, "%010d.png", rgbImageCounter);
-  rgbImageFileName = rgbFolderName + rgbImageIndex;
-  std::cout << rgbImageFileName << std::endl;
-  rgbImageCounter++;
+  sprintf(rgbImageIndex, "rgb/%15.5lf.png", rgbImageTime);
+  fprintf(rgbTextStrm, "%15.5lf \t %s \n", rgbImageTime, rgbImageIndex);
 
   // save the current rgb image
+  rgbImageFileName = folderName + rgbImageIndex;
   imwrite(rgbImageFileName, monoImage);
 }
 
@@ -46,14 +46,14 @@ void imageDepthCallback(const sensor_msgs::ImageConstPtr& msgImageDepth)
     return;
   }
 
-  // change current depth image file name
+  // save rgb image time and name in text file
+  double depthImageTime = msgImageDepth->header.stamp.toSec();
   char depthImageIndex[255];
-  sprintf(depthImageIndex, "%010d.png", depthImageCounter);
-  depthImageFileName = depthFolderName + depthImageIndex;
-  std::cout << depthImageFileName << std::endl;
-  depthImageCounter++;
+  sprintf(depthImageIndex, "depth/%15.5lf.png", depthImageTime);
+  fprintf(depTextStrm, "%15.5lf \t %s \n", depthImageTime, depthImageIndex);
 
   // save the current depth image
+  depthImageFileName = folderName + depthImageIndex;
   imwrite(depthImageFileName, depthImage);
 }
 
@@ -67,15 +67,17 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
 
   // make folders for saving ROS topic images
-  rgbFolderName = "bagImages/rgb/";
-  depthFolderName = "bagImages/depth/";
-  std::string rgbFolderCreateCommand = "mkdir -p " + rgbFolderName;
-  std::string depthFolderCreateCommand = "mkdir -p " + depthFolderName;
+  folderName = "bagImages/";
+  std::string rgbFolderCreateCommand = "mkdir -p " + folderName + "rgb/";
+  std::string depthFolderCreateCommand = "mkdir -p " + folderName + "depth/";
   system(rgbFolderCreateCommand.c_str());
   system(depthFolderCreateCommand.c_str());
 
-  rgbImageCounter = 0;
-  depthImageCounter = 0;
+  // make text files for time sync
+  std::string rgbTextFileName = folderName + "rgb.txt";
+  std::string depthTextFileName = folderName + "depth.txt";
+  rgbTextStrm = fopen(rgbTextFileName.c_str(),"w");
+  depTextStrm = fopen(depthTextFileName.c_str(),"w");
 
   // subscribe mono and depth image
   ros::Subscriber monoImageDataSub = nh.subscribe("/camera/rgb/image_rect_mono", 1, imageMonoCallback);
