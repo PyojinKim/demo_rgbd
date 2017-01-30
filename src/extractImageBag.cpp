@@ -32,6 +32,7 @@ void imageMonoCallback(const sensor_msgs::ImageConstPtr& msgImageMono)
   // save the current rgb image
   rgbImageFileName = folderName + rgbImageIndex;
   imwrite(rgbImageFileName, monoImage);
+  std::cout << rgbImageFileName << std::endl;
 }
 
 
@@ -55,6 +56,7 @@ void imageDepthCallback(const sensor_msgs::ImageConstPtr& msgImageDepth)
   // save the current depth image
   depthImageFileName = folderName + depthImageIndex;
   imwrite(depthImageFileName, depthImage);
+  std::cout << depthImageFileName << std::endl;
 }
 
 
