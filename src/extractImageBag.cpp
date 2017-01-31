@@ -9,8 +9,7 @@
 #include "pointDefinition.h"
 
 std::string folderName, rgbImageFileName, depthImageFileName;
-FILE *rgbTextStrm;
-FILE *depTextStrm;
+FILE *rgbTextStrm, *depTextStrm;
 
 void imageMonoCallback(const sensor_msgs::ImageConstPtr& msgImageMono)
 {
@@ -88,6 +87,8 @@ int main(int argc, char** argv)
 
   ros::spin();
 
+  fclose(rgbTextStrm);
+  fclose(depTextStrm);
   return 0;
 }
 
